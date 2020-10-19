@@ -215,7 +215,7 @@ namespace QuantConnect.Data.UniverseSelection
         {
             if (_subscriptionDataConfigs.Add(subscriptionDataConfig))
             {
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, subscriptionDataConfig.Symbol));
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, subscriptionDataConfig));
                 return true;
             }
             return false;
