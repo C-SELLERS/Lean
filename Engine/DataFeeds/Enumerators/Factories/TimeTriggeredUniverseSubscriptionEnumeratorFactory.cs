@@ -78,27 +78,19 @@ namespace QuantConnect.Lean.Engine.DataFeeds.Enumerators.Factories
                     var time = _timeProvider.GetUtcNow();
                     if (items == null || time == DateTime.MinValue) return;
 
-                    Symbol symbol = null;
-                    if (items.OfType<Symbol>().Any())
-                    {
-                        symbol = items.OfType<Symbol>().FirstOrDefault();
+                    var subscription = items.OfType<SubscriptionDataConfig>().FirstOrDefault();
+                    Symbol symbol = subscription.Symbol;
+                    var increment = subscription.Increment;
 
-                        // the data point time should always be in exchange timezone
-                        time = time.ConvertFromUtc(request.Configuration.ExchangeTimeZone);
-                    }
-                    else if (items.OfType<SubscriptionDataConfig>().Any())
-                    {
-                        var subscription = items.OfType<SubscriptionDataConfig>().FirstOrDefault();
-                        symbol = subscription.Symbol;
-                        var resolution = subscription.Increment;
+                    // the data point time should always be in exchange timezone, if it is an add
+                    // we will push the time by the increment of that sub, if its a remove we will
+                    // handle it now.
+                    time =
+                        args.Action == NotifyCollectionChangedAction.Remove ? time.ConvertFromUtc(request.Configuration.ExchangeTimeZone) :
+                        args.Action == NotifyCollectionChangedAction.Add ? time.ConvertFromUtc(request.Configuration.ExchangeTimeZone) + increment : DateTime.MinValue;
 
-                        // the data point time should always be in exchange timezone, if we have the subscription
-                        // configuration we will push the time out the match up with the next time step
-                        time = time.ConvertFromUtc(request.Configuration.ExchangeTimeZone) + resolution;
-                    }
-
-                    // If we failed to extract a symbol or dataconfig we return null
-                    if(symbol == null) return;
+                    // If we failed to extract a symbol or get a time then return
+                    if (symbol == null || time == DateTime.MinValue) return;
 
                     // Create the new collection and add it
                     var collection = new BaseDataCollection(time, symbol);

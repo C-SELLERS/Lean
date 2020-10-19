@@ -200,7 +200,8 @@ namespace QuantConnect.Data.UniverseSelection
         {
             if (_symbols.Add(symbol))
             {
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, symbol));
+                var subscription = new SubscriptionDataConfig(Configuration, null, symbol);
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, subscription));
                 return true;
             }
             return false;
@@ -230,7 +231,8 @@ namespace QuantConnect.Data.UniverseSelection
         {
             if (RemoveAndKeepTrack(symbol))
             {
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, symbol));
+                var subscription = new SubscriptionDataConfig(Configuration, null, symbol);
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, subscription));
                 return true;
             }
             return false;
