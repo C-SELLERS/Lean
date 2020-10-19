@@ -61,19 +61,20 @@ namespace QuantConnect.Algorithm.Selection
         {
             if (args.Action == NotifyCollectionChangedAction.Remove)
             {
-                var removedSymbol = (Symbol)args.OldItems[0];
-                _symbols.Remove(removedSymbol);
+                dynamic removedSub = args.OldItems[0];
+                _symbols.Remove(removedSub.Symbol);
 
                 // the option has been removed! This can happen when the user manually removed the option contract we remove the underlying
-                if (removedSymbol.SecurityType == SecurityType.Option)
+                if (removedSub.SecurityType == SecurityType.Option)
                 {
-                    Remove(removedSymbol.Underlying);
+                    Remove(removedSub.Symbol.Underlying);
                 }
             }
             else if (args.Action == NotifyCollectionChangedAction.Add)
             {
                 // QCAlgorithm.AddOptionContract will add both underlying and option contract
-                _symbols.Add((Symbol)args.NewItems[0]);
+                dynamic addedSub = args.NewItems[0];
+                _symbols.Add(addedSub.Symbol);
             }
 
             base.OnCollectionChanged(args);
