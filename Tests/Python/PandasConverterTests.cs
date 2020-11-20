@@ -26,6 +26,8 @@ using QuantConnect.Securities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using QuantConnect.Indicators;
+using QuantConnect.Research;
 using QuantConnect.Tests.ToolBox;
 using QuantConnect.ToolBox;
 using QuantConnect.Util;
@@ -310,7 +312,29 @@ def Test4(dataFrame):
                 Assert.Throws<PythonException>(() => test2(dataFrame));
                 Assert.Throws<PythonException>(() => test3(dataFrame));
                 Assert.DoesNotThrow(() => test4(dataFrame));
+            }
+        }
 
+        [Test]
+        public void DataFrameColumnsAreAligned()
+        {
+            var qb = new QuantBook();
+            qb.AddEquity("SPY");
+            var bb = new BollingerBands(30, 2);
+
+            using (Py.GIL())
+            {
+                dynamic bbdf = qb.Indicator(bb, "SPY", 360, Resolution.Daily);
+                var lastIndex = bbdf.last_valid_index();
+                var lastRow = bbdf.loc[lastIndex];
+
+                // Verify each column matches the BollingerBand properties
+                Assert.AreEqual(bb.BandWidth.Current.Value, lastRow["bandwidth"].As<decimal>());
+                Assert.AreEqual(bb.Current.Value, lastRow["bollingerbands"].As<decimal>());
+                Assert.AreEqual(bb.LowerBand.Current.Value, lastRow["lowerband"].As<decimal>());
+                Assert.AreEqual(bb.MiddleBand.Current.Value, lastRow["middleband"].As<decimal>());
+                Assert.AreEqual(bb.Price.Current.Value, lastRow["price"].As<decimal>());
+                Assert.AreEqual(bb.UpperBand.Current.Value, lastRow["upperband"].As<decimal>());
             }
         }
 
