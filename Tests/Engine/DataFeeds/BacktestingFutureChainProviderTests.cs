@@ -26,6 +26,7 @@ namespace QuantConnect.Tests.Engine.DataFeeds
     public class BacktestingFutureChainProviderTests
     {
         private ILogHandler _logHandler;
+        private bool _logHandlerLock;
         private BacktestingFutureChainProvider _provider;
 
         [OneTimeSetUp]
@@ -33,6 +34,9 @@ namespace QuantConnect.Tests.Engine.DataFeeds
         {
             // Store initial Log Handler
             _logHandler = Log.LogHandler;
+            _logHandlerLock = Log.LockHandler;
+
+            Log.LockHandler = false;
             _provider = new BacktestingFutureChainProvider();
         }
 
@@ -41,6 +45,7 @@ namespace QuantConnect.Tests.Engine.DataFeeds
         {
             // Restore intial Log Handler
             Log.LogHandler = _logHandler;
+            Log.LockHandler = _logHandlerLock;
         }
 
         [Test]

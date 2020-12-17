@@ -42,6 +42,9 @@ public class AssemblyInitialize
         {
             Log.LogHandler = new ConsoleLogHandler();
         }
+
+        // Lock the log handler for the remainder of these tests
+        Log.LockHandler = true;
     }
 
     public static void AdjustCurrentDirectory()

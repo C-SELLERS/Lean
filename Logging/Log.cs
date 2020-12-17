@@ -30,6 +30,7 @@ namespace QuantConnect.Logging
         private static string _lastTraceText = "";
         private static string _lastErrorText = "";
         private static bool _debuggingEnabled;
+        private static bool _lockHandler;
         private static int _level = 1;
         private static ILogHandler _logHandler = new ConsoleLogHandler();
 
@@ -39,7 +40,7 @@ namespace QuantConnect.Logging
         public static ILogHandler LogHandler
         {
             get { return _logHandler; }
-            set { _logHandler = value; }
+            set { if(!LockHandler){ _logHandler = value; } }
         }
 
         /// <summary>
@@ -49,6 +50,15 @@ namespace QuantConnect.Logging
         {
             get { return _debuggingEnabled; }
             set { _debuggingEnabled = value; }
+        }
+        
+        /// <summary>
+        /// Global flag to lock current handler, used by test setup so it cannot be overriden
+        /// </summary>
+        public static bool LockHandler
+        {
+            get { return _lockHandler; }
+            set { _lockHandler = value; }
         }
 
         /// <summary>

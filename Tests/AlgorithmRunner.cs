@@ -89,9 +89,11 @@ namespace QuantConnect.Tests
                 // Store initial log variables
                 var initialLogHandler = Log.LogHandler;
                 var initialDebugEnabled = Log.DebuggingEnabled;
+                var initialLogLock = Log.LockHandler;
 
                 // Log handlers specific to this test function
                 var newLogHandlers = new ILogHandler[] { new ConsoleErrorLogHandler(), new FileLogHandler(logFile, false) };
+                Log.LockHandler = false;
 
                 using (Log.LogHandler = new CompositeLogHandler(newLogHandlers))
                 using (var algorithmHandlers = LeanEngineAlgorithmHandlers.FromConfiguration(Composer.Instance))
@@ -143,6 +145,7 @@ namespace QuantConnect.Tests
                 // Reset settings to initial values
                 Log.LogHandler = initialLogHandler;
                 Log.DebuggingEnabled = initialDebugEnabled;
+                Log.LockHandler = initialLogLock;
             }
             catch (Exception ex)
             {
