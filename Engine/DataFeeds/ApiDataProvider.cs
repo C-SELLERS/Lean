@@ -95,7 +95,16 @@ namespace QuantConnect.Lean.Engine.DataFeeds
         /// <returns>A FileStream of the data</returns>
         private FileStream DownloadData(string filepath, Symbol symbol, DateTime date, Resolution resolution)
         {
-            Log.Trace("ApiDataProvider.Fetch(): Attempting to get data from QuantConnect.com's data library for symbol({0}), resolution({1}) and date({2}).",
+            // Determine data tickType
+            var tickType = LeanData.GetCommonTickType(symbol.SecurityType);
+            var fileName = Path.GetFileNameWithoutExtension(filepath);
+            if (fileName.Contains("_"))
+            {
+                tickType = (TickType)Enum.Parse(typeof(TickType), fileName.Split('_')[1], true);
+            }
+
+            Log.Trace("ApiDataProvider.Fetch(): Attempting to get {0} data from QuantConnect.com's data library for symbol({1}), resolution({2}) and date({3}).",
+                tickType,
                 symbol.Value,
                 resolution,
                 date.Date.ToShortDateString());
