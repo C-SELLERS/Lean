@@ -185,7 +185,7 @@ namespace QuantConnect.Interfaces
         /// <param name="resolution">Resolution of data requested.</param>
         /// <param name="date">Date of the data requested.</param>
         /// <returns>Link to the downloadable data.</returns>
-        Link ReadDataLink(Symbol symbol, Resolution resolution, DateTime date);
+        Link ReadDataLink(Symbol symbol, Resolution resolution, DateTime date, TickType tickType);
 
         /// <summary>
         /// Method to download and save the data purchased through QuantConnect
@@ -194,7 +194,7 @@ namespace QuantConnect.Interfaces
         /// <param name="resolution">Resolution of data requested.</param>
         /// <param name="date">Date of the data requested.</param>
         /// <returns>A bool indicating whether the data was successfully downloaded or not.</returns>
-        bool DownloadData(Symbol symbol, Resolution resolution, DateTime date);
+        bool DownloadData(Symbol symbol, Resolution resolution, DateTime date, TickType tickType);
 
         /// <summary>
         /// Create a new live algorithm for a logged in user.

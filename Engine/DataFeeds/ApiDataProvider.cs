@@ -95,7 +95,7 @@ namespace QuantConnect.Lean.Engine.DataFeeds
         /// <returns>A FileStream of the data</returns>
         private FileStream DownloadData(string filepath, Symbol symbol, DateTime date, Resolution resolution)
         {
-            // Determine data tickType
+            // Determine data tickType to request
             var tickType = LeanData.GetCommonTickType(symbol.SecurityType);
             var fileName = Path.GetFileNameWithoutExtension(filepath);
             if (fileName.Contains("_"))
@@ -109,7 +109,7 @@ namespace QuantConnect.Lean.Engine.DataFeeds
                 resolution,
                 date.Date.ToShortDateString());
 
-            var downloadSuccessful = _api.DownloadData(symbol, resolution, date);
+            var downloadSuccessful = _api.DownloadData(symbol, resolution, date, tickType);
 
             if (downloadSuccessful)
             {

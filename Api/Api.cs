@@ -750,7 +750,7 @@ namespace QuantConnect.Api
         /// <param name="date">Date of the data requested.</param>
         /// <returns><see cref="Link"/> to the downloadable data.</returns>
 
-        public Link ReadDataLink(Symbol symbol, Resolution resolution, DateTime date)
+        public Link ReadDataLink(Symbol symbol, Resolution resolution, DateTime date, TickType tickType)
         {
             var request = new RestRequest("data/read", Method.POST)
             {
@@ -764,7 +764,8 @@ namespace QuantConnect.Api
                 type = symbol.ID.SecurityType.ToLower(),
                 market = symbol.ID.Market,
                 resolution = resolution.ToString(),
-                date = date.ToStringInvariant("yyyyMMdd")
+                date = date.ToStringInvariant("yyyyMMdd"),
+                tickType = tickType.ToString()
             }), ParameterType.RequestBody);
 
             Link result;
@@ -802,12 +803,13 @@ namespace QuantConnect.Api
         /// <param name="symbol">Symbol of security of which data will be requested.</param>
         /// <param name="resolution">Resolution of data requested.</param>
         /// <param name="date">Date of the data requested.</param>
+        /// <param name="tickType">Type of data request</param>
         /// <returns>A <see cref="bool"/> indicating whether the data was successfully downloaded or not.</returns>
 
-        public bool DownloadData(Symbol symbol, Resolution resolution, DateTime date)
+        public bool DownloadData(Symbol symbol, Resolution resolution, DateTime date, TickType tickType)
         {
             // Get a link to the data
-            var link = ReadDataLink(symbol, resolution, date);
+            var link = ReadDataLink(symbol, resolution, date, tickType);
 
             // Make sure the link was successfully retrieved
             if (!link.Success)
