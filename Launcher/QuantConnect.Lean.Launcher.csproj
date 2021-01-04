@@ -23,7 +23,6 @@
     <PackageReference Include="Microsoft.CSharp" Version="4.*" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Baseclass.Contrib.Nuget.Output" Version="2.2.0-xbuild02" />
     <PackageReference Include="DynamicInterop" Version="0.7.4" />
     <PackageReference Include="IKVM" Version="8.1.5717.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.3" />
@@ -34,6 +33,7 @@
     <PackageReference Include="R.NET.Community" Version="1.6.5" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>

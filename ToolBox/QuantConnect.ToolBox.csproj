@@ -29,6 +29,29 @@
     <Message Text="IsLinux $(IsLinux)" Importance="high" />
     <Message Text="ForceLinuxBuild $(ForceLinuxBuild)" Importance="high" />
   </Target>
+  <Choose>
+    <When Condition="$(IsWindows) AND '$(ForceLinuxBuild)' != 'true'">
+      <ItemGroup>
+        <Reference Include="Python.Runtime, Version=1.0.5.30, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>$(NuGetPackageFolders)\quantConnect.pythonnet\1.0.5.30\lib\win\Python.Runtime.dll</HintPath>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <When Condition="$(IsLinux) OR '$(ForceLinuxBuild)' == 'true'">
+      <ItemGroup>
+        <Reference Include="Python.Runtime, Version=1.0.5.30, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>$(NuGetPackageFolders)\quantConnect.pythonnet\1.0.5.30\lib\linux\Python.Runtime.dll</HintPath>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <When Condition="$(IsOSX) AND '$(ForceLinuxBuild)' != 'true'">
+      <ItemGroup>
+        <Reference Include="Python.Runtime, Version=1.0.5.30, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>$(NuGetPackageFolders)\quantConnect.pythonnet\1.0.5.30\lib\osx\Python.Runtime.dll</HintPath>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
   <ItemGroup>
     <PackageReference Include="System.ComponentModel.Composition" Version="4.*" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.*" />
