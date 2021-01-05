@@ -9,6 +9,8 @@
     <Copyright>Copyright ©  2015</Copyright>
     <CodeAnalysisRuleSet>..\QuantConnect.ruleset</CodeAnalysisRuleSet>
     <LangVersion>6</LangVersion>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
     <PostBuildEvent Condition="'$(OS)' == 'Windows_NT' ">
       build
     </PostBuildEvent>

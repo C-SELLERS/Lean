@@ -7,9 +7,8 @@
     <Authors>QuantConnect Corporation</Authors>
     <PackageId>QuantConnect.Algorithm.Framework</PackageId>
     <PackageTags>Library</PackageTags>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <LangVersion>6</LangVersion>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
   <PropertyGroup>
     <IsWindows>false</IsWindows>

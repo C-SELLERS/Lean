@@ -7,16 +7,16 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <CodeAnalysisRuleSet>..\QuantConnect.ruleset</CodeAnalysisRuleSet>
     <LangVersion>6</LangVersion>
+    <StartupObject>QuantConnect.Lean.Launcher.Program</StartupObject>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <Optimize>$(SelectedOptimization)</Optimize>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject>QuantConnect.Lean.Launcher.Program</StartupObject>
-  </PropertyGroup>
   <Target Name="Print" BeforeTargets="Build">
     <Message Text="SelectedOptimization $(SelectedOptimization)" Importance="high" />
   </Target>
+  <!-- Reference Packages -->
   <ItemGroup>
     <PackageReference Include="System.ComponentModel.Composition" Version="4.*" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.*" />
@@ -32,13 +32,11 @@
     <PackageReference Include="Microsoft.NetFramework.Analyzers" Version="2.9.3" />
     <PackageReference Include="R.NET.Community" Version="1.6.5" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.Windows.Forms" />
-  </ItemGroup>
+  <!-- Include any files outside of this projects directory-->
   <ItemGroup>
     <Compile Include="..\Common\Properties\SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />
   </ItemGroup>
+  <!-- Reference Projects -->
   <ItemGroup>
     <ProjectReference Include="..\Algorithm.CSharp\QuantConnect.Algorithm.CSharp.csproj" />
     <ProjectReference Include="..\AlgorithmFactory\QuantConnect.AlgorithmFactory.csproj" />
@@ -56,6 +54,7 @@
     <ProjectReference Include="..\Queues\QuantConnect.Queues.csproj" />
     <ProjectReference Include="..\ToolBox\QuantConnect.ToolBox.csproj" />
   </ItemGroup>
+  <!-- Unique files to include -->
   <ItemGroup>
     <None Include="config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
