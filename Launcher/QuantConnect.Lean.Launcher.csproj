@@ -9,6 +9,7 @@
     <LangVersion>6</LangVersion>
     <StartupObject>QuantConnect.Lean.Launcher.Program</StartupObject>
     <OutputPath>bin\$(Configuration)\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <Optimize>$(SelectedOptimization)</Optimize>
