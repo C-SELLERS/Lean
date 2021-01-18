@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
 using QuantConnect.Logging;
@@ -21,6 +22,7 @@ namespace QuantConnect.Brokerages.Tradier
         private string _url;
         private readonly ISymbolMapper _symbolMapper;
         private string _sessionId; // Storing tradier session ID
+        private DateTime _sessionIdExpiration = DateTime.MinValue;
 
         /// <summary>
         /// Creates a new instance of the <see cref="TradierWebSocketWrapper"/> class
@@ -35,7 +37,7 @@ namespace QuantConnect.Brokerages.Tradier
 
             _url = BaseUrl + _endpoint;
             Initialize(_url);
-            CreateSession();
+            SetSession();
 
             Open += OnOpen;
             Closed += OnClosed;
@@ -44,26 +46,33 @@ namespace QuantConnect.Brokerages.Tradier
             Connect();
         }
 
-        private void CreateSession()
+        /// <summary>
+        /// Create session for streaming with tradier using rest api
+        /// </summary>
+        private void SetSession()
         {
-            // Get session ID
-            var client = new RestClient("https://api.tradier.com/v1" + _endpoint + "/session");
-            var request = new RestRequest();
-            request.Method = Method.POST;
-            request.AddHeader("Accept", "application/json");
-            request.AddHeader("Authorization", "Bearer " + _apiKey);
-
-            var rawResponse = client.Execute(request);
-            var result = JsonConvert.DeserializeObject<TradierSessionResponse>(rawResponse.Content);
-
-            string sessionId;
-            if(result.Stream.TryGetValue("sessionid", out sessionId))
+            if (_sessionId == null || _sessionIdExpiration < DateTime.UtcNow)
             {
-                Log.Error("TradierWebSocketWrapper.CreateSession(): Failed to create session");
-                // Log the error!!!
-            }
+                // Get session IDs
+                var url = "https://api.tradier.com/v1" + _endpoint;
+                var client = new RestClient(url);
+                var request = new RestRequest("/session", Method.POST);
+                request.AddHeader("Authorization", "Bearer " + _apiKey);
 
-            _sessionId = sessionId;
+                var rawResponse = client.Execute(request);
+                var result = JsonConvert.DeserializeObject<TradierSessionResponse>(rawResponse.Content);
+
+                string sessionId;
+                if (!result.Stream.TryGetValue("sessionid", out sessionId))
+                {
+                    Log.Error("TradierWebSocketWrapper.CreateSession(): Failed to create session");
+                    // Log the error!!!
+                }
+
+                // This session ID expires in 5 minutes
+                _sessionIdExpiration = DateTime.UtcNow + TimeSpan.FromMinutes(5);
+                _sessionId = sessionId;
+            }
         }
 
         internal class TradierSessionResponse : RestResponse 
@@ -110,6 +119,7 @@ namespace QuantConnect.Brokerages.Tradier
         private void OnOpen(object sender, EventArgs e)
         {
             Log.Trace($"TradierWebSocket.OnOpen(): connection open");
+            test();
         }
     }
 }
