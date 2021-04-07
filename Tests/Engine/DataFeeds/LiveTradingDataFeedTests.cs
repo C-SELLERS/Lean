@@ -692,7 +692,7 @@ namespace QuantConnect.Tests.Engine.DataFeeds
                 }
             },
             alwaysInvoke: false,
-            secondsTimeStep: 3600 * 4,
+            secondsTimeStep: 3600 * 16,
             endDate: delistingDate.AddDays(2));
 
             Assert.AreEqual(1, receivedDelistedWarning, $"Did not receive {DelistingType.Warning}");
